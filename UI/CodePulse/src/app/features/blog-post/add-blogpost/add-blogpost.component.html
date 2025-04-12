@@ -1,0 +1,48 @@
+<div class="container">
+    <h1 class="mt-3">Add Blogpost</h1>
+    <form #form="ngForm" (ngSubmit)="onFormSubmit()">
+        <div class="mt-2 mb-5">
+            <div class="mt-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" [(ngModel)]="model.title">
+            </div>
+            <div class="mt-3">
+                <label for="urlHandle" class="form-label">UrlHandle</label>
+                <input type="text" class="form-control" id="urlHandle" name="urlHandle" [(ngModel)]="model.urlHandle">
+            </div>
+            <div class="mt-3">
+                <label for="sDescription" class="form-label">Short Description</label>
+                <input type="text" class="form-control" id="sDescription" name="sDescription" [(ngModel)]="model.shortDescription">
+            </div>
+            <div class="mt-3">
+                <label for="content" class="form-label">Content</label>
+                <textarea class="form-control" id="content" name="content" [(ngModel)]="model.content">Content</textarea>
+            </div>
+            <div class="mt-3">
+                <label for="featuredImgUrl" class="form-label">Featured Image Url</label>
+                <input type="text" class="form-control" id="featuredImgUrl" name="featuredImgUrl" [(ngModel)]="model.featuredImageUrl">
+            </div>
+            <div class="mt-3">
+                <label for="pDate" class="form-label">Publshed Date</label>
+                <input type="date" class="form-control" id="pDate" name="pDate" value="{{model.publishedDate}}"[ngModel]="model.publishedDate | date: 'yyy-MM-dd'"
+                (ngModelChange)="model.publishedDate = $event">  <!--value htae and ngModel() delelte-->
+            </div>
+            <div class="mt-3">
+                <label for="author" class="form-label">Author</label>
+                <input type="text" class="form-control" id="author" name="author" [(ngModel)]="model.author">
+            </div>
+
+            <!--Name Has to be defined in two ways data binding and forms, if not it won't show anything about that-->
+            <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="isVisible" [(ngModel)]="model.isVisible" name="isVisible">
+                <label class="form-check-label" for="CheckDefault">
+                    Is Visible? 
+                </label>
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+
+        </div>
+    </form>
+</div>
