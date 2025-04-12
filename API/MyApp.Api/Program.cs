@@ -17,8 +17,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionString"));
 });
 
-// Add services to the container.
+// Add services to the container in here we careate rrepositories and add them to container
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IBlogpostRepository, BlogpostRepository>();
+
 
 var app = builder.Build();
 
