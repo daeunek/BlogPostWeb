@@ -16,11 +16,25 @@
             </div>
             <div class="mt-3">
                 <label for="content" class="form-label">Content</label>
-                <textarea class="form-control" id="content" name="content" [(ngModel)]="model.content">Content</textarea>
+                <div class="d-flex flex-row">
+                    <div class="col-6 p-2"> <!--Text Area-->
+                        <textarea id ="content" name ="content" class="form-control" style="height: 350px;max-height: 350px;"[(ngModel)]="model.content"></textarea>
+                    </div>  
+                    <div class="col-6 p-2" style="max-height: 350px; overflow-y: scroll;">
+                        <markdown [data]="model.content"></markdown>     <!--model.content is same as Text Area-->
+                    </div>    <!--Live Preview-->
+                </div>
+
             </div>
             <div class="mt-3">
                 <label for="featuredImgUrl" class="form-label">Featured Image Url</label>
+                <ng-container *ngIf="model.featuredImageUrl != ''">
+                    <div>
+                        <img [src]="model.featuredImageUrl" height="100" class="my-2">
+                    </div>
+                </ng-container>
                 <input type="text" class="form-control" id="featuredImgUrl" name="featuredImgUrl" [(ngModel)]="model.featuredImageUrl">
+
             </div>
             <div class="mt-3">
                 <label for="pDate" class="form-label">Publshed Date</label>

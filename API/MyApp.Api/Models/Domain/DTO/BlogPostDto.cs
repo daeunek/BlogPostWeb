@@ -11,6 +11,8 @@ namespace MyApp.Api.Models.Domain.DTO
         public DateTime PublishedDate { get; set; }
         public string Author { get; set; } = string.Empty;
         public bool IsVisible { get; set; }
+
+        public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
     }
 }
 // Compare this snippet from MyApp.Api/Models/Domain/DTO/CreateBlogPostRequestDto.cs:
