@@ -29,10 +29,11 @@ export class EditCategoryComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-       this.paramsSubscription = this.route.params.subscribe({
-        next: (params) => {
-          this.id = params['id'];
+       this.paramsSubscription = this.route.params.subscribe({             //in this case we can use params instead of paramMap
+        next: (params) => {                                             
+          this.id = params['id'];                                          //but it will be like params.get('id')
 
+          //Get category from API use (services file from category)
           if (this.id){
             this.categoryService.getCategory(this.id).subscribe({
               next: (response) => {
