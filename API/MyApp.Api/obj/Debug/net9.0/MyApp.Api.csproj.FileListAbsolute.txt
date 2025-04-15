@@ -46,6 +46,10 @@
 /home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Microsoft.SqlServer.Server.dll
 /home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Microsoft.Win32.SystemEvents.dll
 /home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Mono.TextTemplating.dll
+/home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Scrutor.dll
+/home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.Annotations.dll
+/home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.Filters.dll
+/home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.Filters.Abstractions.dll
 /home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
 /home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /home/eaint/Desktop/KMITL/GoFive/CodePulse/API/MyApp.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll

@@ -2,6 +2,7 @@ using CodePulse.API.Repositories.Interface;
 using MyApp.Api.Models.Domain;
 using CodePulse.API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CodePulse.API.Repositories.Implementation
 {
@@ -31,6 +32,11 @@ namespace CodePulse.API.Repositories.Implementation
             return await dbContext.BlogPosts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<BlogPost?> GetByUrlHandle(string urlHandle)
+        {
+            return await dbContext.BlogPosts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.UrlHandle == urlHandle);
+        }
+
         public async Task<BlogPost?> UpdateAsync(BlogPost blogPost)
         {
             var existingBlogpost = await dbContext.BlogPosts.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == blogPost.Id);
@@ -46,5 +52,23 @@ namespace CodePulse.API.Repositories.Implementation
             return blogPost;
 
         }
+
+        public async Task<BlogPost?> DeleteAsync(Guid id)
+        {
+            //In delete blogpost, removing blogpost will auto remove categories
+            var existingBlogpost = await dbContext.BlogPosts.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingBlogpost != null)
+            {
+                dbContext.BlogPosts.Remove(existingBlogpost);
+                await dbContext.SaveChangesAsync();
+                return existingBlogpost;
+            }
+            return null;
+        }
+
+
+
+        
     }
 }

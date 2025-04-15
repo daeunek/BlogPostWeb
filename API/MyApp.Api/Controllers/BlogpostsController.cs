@@ -144,6 +144,42 @@ namespace MyApp.Api.Controllers
         }
 
 
+        // GET : {apiBaseUrl}/api/blogposts/{id}
+        [HttpGet]
+        [Route("{urlHandle}")]
+        public async Task<IActionResult> GetBlogPostByUrlHandle([FromRoute] string urlHandle)
+        {
+            //get blog post details from repository
+            var blogpost = await blogpostRepository.GetByUrlHandle(urlHandle);
+            if (blogpost == null)
+            {
+                return NotFound();
+            }
+            //Convert Domain Model to DTO
+            var response = new BlogPostDto
+            {
+                Id = blogpost.Id,
+                Title = blogpost.Title,
+                ShortDescription = blogpost.ShortDescription,
+                Content = blogpost.Content,
+                FeaturedImageUrl = blogpost.FeaturedImageUrl,
+                UrlHandle = blogpost.UrlHandle,
+                PublishedDate = blogpost.PublishedDate,
+                Author = blogpost.Author,
+                IsVisible = blogpost.IsVisible,
+                Categories = blogpost.Categories.Select(x => new CategoryDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlHandle = x.UrlHandle
+                }).ToList()
+            };
+
+            return Ok(response);
+
+        }
+
+
         //PUT: {apiBaseUrl}/api/blogposts/{id}]
         [HttpPut]
         [Route("{id:Guid}")]
@@ -199,6 +235,31 @@ namespace MyApp.Api.Controllers
                 }).ToList()
             };
 
+            return Ok(response);
+        }
+
+        //DELETE: {apiBaseUrl}/api/blogposts/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
+        {
+            var deletedBlogpost = await blogpostRepository.DeleteAsync(id);
+            if (deletedBlogpost == null)
+            {
+                return NotFound();
+            }
+            var response = new BlogPostDto
+            {
+                Id = deletedBlogpost.Id,
+                Title = deletedBlogpost.Title,
+                ShortDescription = deletedBlogpost.ShortDescription,
+                Content = deletedBlogpost.Content,
+                FeaturedImageUrl = deletedBlogpost.FeaturedImageUrl,
+                UrlHandle = deletedBlogpost.UrlHandle,
+                PublishedDate = deletedBlogpost.PublishedDate,
+                Author = deletedBlogpost.Author,
+                IsVisible = deletedBlogpost.IsVisible,
+            };
             return Ok(response);
         }
     }

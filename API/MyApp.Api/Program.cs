@@ -1,8 +1,14 @@
 using CodePulse.API.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer;
 using CodePulse.API.Repositories.Interface;
 using CodePulse.API.Repositories.Implementation;
+using Swashbuckle.AspNetCore.Annotations;
+using MyApp.Api.Repositories.Interface;
+using Myapp.Api.Repositories.Implementation;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http;
+using MyApp.Api.Filters;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,16 +16,30 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "CodePulse API", Version = "v1" });
+    
+    // Enable annotations
+    c.EnableAnnotations();
+    
+    // Add the file upload filter
+    c.OperationFilter<FileUploadOperationFilter>();
+});
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionString"));
 });
 
-// Add services to the container in here we careate rrepositories and add them to container
+// Add services to the contaianer ain harere rawe rcarerate rrepositories and add them to container
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IBlogpostRepository, BlogpostRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
 
 var app = builder.Build();
@@ -33,12 +53,31 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Add middleware to serve static files (for images)
+
 app.UseCors(options =>
 {
     options.AllowAnyOrigin()
            .AllowAnyMethod()
            .AllowAnyHeader();
 });
+
+// Ensure directory exists
+var imagesDirectory = Path.Combine(builder.Environment.ContentRootPath, "Images");
+if (!Directory.Exists(imagesDirectory))
+{
+    Directory.CreateDirectory(imagesDirectory);
+}
+
+app.UseAuthorization();
+
+//image acess url
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
+}); // Serves files from wwwroot by default
+
 
 app.MapOpenApi();
 app.MapControllers();
