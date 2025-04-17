@@ -9,6 +9,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Http;
 using MyApp.Api.Filters;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,10 +39,52 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionString"));
 });
 
+builder.Services.AddDbContext<AuthDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CodePulseConnectionString"));
+});
+
+
 // Add services to the contaianer ain harere rawe rcarerate rrepositories and add them to container
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IBlogpostRepository, BlogpostRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
+
+//Authentication and Authorization
+builder.Services.AddIdentityCore<IdentityUser> ()
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("CodePulse")
+    .AddEntityFrameworkStores<AuthDbContext>()
+    .AddDefaultTokenProviders();
+
+// For configure methods
+builder.Services.Configure<IdentityOptions> (options =>
+{
+    // Password settings
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 4;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequiredUniqueChars = 0;
+});
+
+// Jwt token authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            AuthenticationType = "Jwt",   //insert Jwt in appsetting.json
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 
 
 var app = builder.Build();
@@ -54,7 +99,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Add middleware to serve static files (for images)
-
 app.UseCors(options =>
 {
     options.AllowAnyOrigin()
@@ -69,6 +113,7 @@ if (!Directory.Exists(imagesDirectory))
     Directory.CreateDirectory(imagesDirectory);
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 //image acess url

@@ -4,6 +4,7 @@ using MyApp.Api.Models.Domain.DTO;
 using MyApp.Api.Models.Domain;
 using CodePulse.API.Repositories.Interface;
 using CodePulse.API.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CodePulse.API.Controllers
 {   
@@ -46,6 +47,7 @@ namespace CodePulse.API.Controllers
 
         //GET: https://localhost:7274/api/Categories
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllCategories()
         {
             var categories = await categoryRepository.GetAllAsync();
